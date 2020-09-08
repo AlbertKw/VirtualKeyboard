@@ -6,7 +6,7 @@ const Keyboard = {
   },
 
   eventHandlers: {
-    onclick: null,
+    oninput: null,
     onclose: null,
   },
 
@@ -21,7 +21,7 @@ const Keyboard = {
     this.domElements.keysContainer = document.createElement("div");
 
     //Assign classes
-    this.domElements.main.classList.add("keyboard");
+    this.domElements.main.classList.add("keyboard", "keyboard-hidden");
     this.domElements.keysContainer.classList.add("keyboard-keys");
     this.domElements.keysContainer.appendChild(this._createKeys());
 
@@ -30,6 +30,15 @@ const Keyboard = {
     document.body.appendChild(this.domElements.main);
 
     this.domElements.keys = document.querySelectorAll(".keyboard-key");
+
+    //Use keyboard for elements with .keyboard-text
+    document.querySelectorAll(".keyboard-text").forEach(el => {
+      el.addEventListener("focus", () => {
+        this.open(el.value, currentValue => {
+          el.value = currentValue;
+        });
+      })
+    })
   },
 
   _createKeys() {
@@ -65,6 +74,7 @@ const Keyboard = {
               0,
               this.properties.value.length - 1
             );
+            this._triggerEvent("oninput");
           });
           break;
 
@@ -87,6 +97,7 @@ const Keyboard = {
 
           keyElement.addEventListener("click", () => {
             this.properties.value += "\n";
+            this._triggerEvent("oninput");
           });
           break;
 
@@ -95,7 +106,8 @@ const Keyboard = {
           keyElement.classList.add("keyboard-key-done", "keyboard-key-wide");
 
           keyElement.addEventListener("click", () => {
-            this.domElements.main.classList.add("keyboard-hidden");
+            this.close();
+            this._triggerEvent("onclose");
           });
           break;
 
@@ -104,6 +116,7 @@ const Keyboard = {
           keyElement.classList.add("keyboard-key-extra-wide");
           keyElement.addEventListener("click", () => {
             this.properties.value += " ";
+            this._triggerEvent("oninput");
           });
           break;
 
@@ -111,6 +124,7 @@ const Keyboard = {
           keyElement.innerHTML = key;
           keyElement.addEventListener("click", () => {
             this.properties.value += this.properties.capsLock ? key.toUpperCase() : key.toLowerCase();
+            this._triggerEvent("oninput");
           });
           break;
       }
@@ -134,6 +148,26 @@ const Keyboard = {
       }
     }
   },
+
+  _triggerEvent(handlerName) {
+    if(typeof this.eventHandlers[handlerName] == "function") {
+      this.eventHandlers[handlerName](this.properties.value);
+    }
+  },
+
+  open(initialValue, oninput, onclose) {
+    this.properties.value = initialValue || "";
+    this.eventHandlers.oninput = oninput;
+    this.eventHandlers.onclose = onclose;
+    this.domElements.main.classList.remove("keyboard-hidden");
+  },
+
+  close() {
+    this.properties.value = "";
+    this.eventHandlers.oninput = null;
+    this.eventHandlers.onclose = null;
+    this.domElements.main.classList.add("keyboard-hidden");
+  }
 };
 
 window.addEventListener("DOMContentLoaded", () => {
