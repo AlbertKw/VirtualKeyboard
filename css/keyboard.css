@@ -4,12 +4,23 @@
   box-sizing: border-box;
 }
 
+body {
+  background: rgb(163, 0, 101);
+  margin: 5px;
+}
+
+h1 {
+  color: rgb(218, 188, 170);
+  text-align: center;
+  margin-top: 2%;
+}
+
 .keyboard {
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
-  background-color: #397e9e;
+  background-color: rgb(69, 105, 144);
   user-select: none;
   padding: 5px 0;
   box-shadow: 0px -10px 11px 0px rgba(0, 0, 0, 0.15);
@@ -28,7 +39,7 @@
   border: none;
   border-radius: 5px;
   color: white;
-  background: rgb(111 178 210 / 75%);
+  background: rgb(90, 131, 175);
   padding: 5px;
   height: 45px;
   width: 5%;
@@ -73,4 +84,17 @@
 
 .keyboard-key-active::after {
   background: greenyellow;
+}
+
+.text-areas-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #17301C;
+  margin: 2% 5%;
+  padding: 2%;
+  height: 500px;
+  max-height: 50%;
+  border-radius: 10px;
+  box-shadow: 0px 0px 16px 3px rgba(0,0,0,0.48);
 }
